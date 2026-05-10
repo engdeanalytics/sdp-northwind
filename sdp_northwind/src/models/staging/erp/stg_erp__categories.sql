@@ -4,9 +4,10 @@ create or refresh materialized view `${target_catalog}`.`${staging_schema}`.stg_
     , category_description string comment 'Category description'
     , constraint not_null_category_pk expect (category_pk is not null) on violation fail update
     , constraint unique_category_pk expect (pk_count = 1) on violation fail update
+    , pk_count int comment 'Data quality column to check for duplicates'
 )
 comment 'Staging table for product categories data'
-as 
+as
 with
     source_data as (
         select *
