@@ -2,8 +2,8 @@
 
 resources:
   pipelines:
-    sdp_northwind_etl:
-      name: sdp_northwind_etl
+    sdp_northwind:
+      name: sdp_northwind
       catalog: ${var.target_catalog}
       schema: ${var.target_schema}
       serverless: true
@@ -11,7 +11,7 @@ resources:
 
       libraries:
         - glob:
-            include: ../src/models/**
+            include: ../src/models/**/*.sql
 
       configuration:
         # Raw catalog and schemas
