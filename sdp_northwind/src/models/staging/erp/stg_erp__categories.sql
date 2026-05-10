@@ -1,4 +1,4 @@
-create or refresh materialized view stg_erp__categories(
+create or refresh materialized view `${target_catalog}`.`${staging_schema}`.stg_erp__categories(
     category_pk int comment 'Primary key for the categories table'
     , category_name string comment 'Category name'
     , category_description string comment 'Category description'
@@ -10,7 +10,7 @@ as
 with
     source_data as (
         select *
-        from raw.erp_northwind.categories
+        from `${raw_catalog}`.`${erp_source_schema}`.categories
     )
 
     , renamed as (

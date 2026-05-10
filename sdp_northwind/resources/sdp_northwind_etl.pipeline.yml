@@ -4,17 +4,23 @@ resources:
   pipelines:
     sdp_northwind_etl:
       name: sdp_northwind_etl
-      catalog: ${var.catalog}
-      schema: ${var.schema}
+      catalog: ${var.target_catalog}
+      schema: ${var.target_schema}
       serverless: true
-      root_path: "../src"
+      root_path: ../src/models
 
       libraries:
         - glob:
-            include: ../src/**
+            include: ../src/models/**
 
-      environment:
-        dependencies:
-          # We include every dependency defined by pyproject.toml by defining an editable environment
-          # that points to the folder where pyproject.toml is deployed.
-          - --editable ${workspace.file_path}
+      configuration:
+        # Raw catalog and schemas
+        raw_catalog: ${var.raw_catalog}
+        erp_source_schema: ${var.erp_source_schema}
+        # Target catalog and schemas
+        target_catalog: ${var.target_catalog}
+        target_schema: ${var.target_schema}
+        # Production schemas
+        staging_schema: ${var.staging_schema}
+        intermediate_schema: ${var.intermediate_schema}
+        marts_schema: ${var.marts_schema}

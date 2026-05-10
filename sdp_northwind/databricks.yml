@@ -7,12 +7,33 @@ bundle:
 include:
   - resources/*.yml
 
+sync:
+  exclude:
+    - src/models/**/.gitkeep
+    - src/scripts/**/.gitkeep
+
 # Variable declarations. These variables are assigned in the dev/prod targets below.
 variables:
-  catalog:
-    description: The catalog to use
-  schema:
-    description: The schema to use
+  # Raw catalog and schemas
+  raw_catalog:
+    description: The source/raw catalog to read from.
+    default: raw
+  erp_source_schema:
+    description: Raw catalog schema for the ERP Northwind source system.
+    default: erp_northwind
+  # Target catalog and schemas
+  target_catalog:
+    description: The catalog where pipeline outputs are published.
+  target_schema:
+    description: The active target schema for this run.
+  # Production schemas
+  staging_schema:
+    description: Schema where staging datasets are published.
+  intermediate_schema:
+    description: Schema where intermediate datasets are published.
+  marts_schema:
+    description: Schema where marts datasets are published.
+
 
 targets:
   dev:
@@ -24,18 +45,24 @@ targets:
     default: true
     workspace:
       host: https://dbc-f652df78-dc6c.cloud.databricks.com
+      root_path: /Workspace/Users/${workspace.current_user.userName}/.bundle/${bundle.name}/${bundle.target}
     variables:
-      catalog: dev
-      schema: ${workspace.current_user.short_name}
+      target_catalog: dev
+      staging_schema: ${var.target_schema}
+      intermediate_schema: ${var.target_schema}
+      marts_schema: ${var.target_schema}
+
   prod:
     mode: production
     workspace:
       host: https://dbc-f652df78-dc6c.cloud.databricks.com
-      # We explicitly deploy to /Workspace/Users/rulyan.fernandes@indicium.tech to make sure we only have a single copy.
-      root_path: /Workspace/Users/rulyan.fernandes@indicium.tech/.bundle/${bundle.name}/${bundle.target}
+      root_path: /Workspace/Users/${workspace.current_user.userName}/.bundle/${bundle.name}/${bundle.target}
     variables:
-      catalog: dev
-      schema: prod
+      target_catalog: prod
+      target_schema: prod # Default target schema for production, when schema is not specified
+      staging_schema: staging
+      intermediate_schema: intermediate
+      marts_schema: marts
     permissions:
-      - user_name: rulyan.fernandes@indicium.tech
+      - user_name: ${workspace.current_user.userName}
         level: CAN_MANAGE
