@@ -7,11 +7,11 @@ resources:
       catalog: ${var.catalog}
       schema: ${var.schema}
       serverless: true
-      root_path: "../src/sdp_northwind_etl"
+      root_path: "../src"
 
       libraries:
         - glob:
-            include: ../src/sdp_northwind_etl/transformations/**
+            include: ../src/**
 
       environment:
         dependencies:
