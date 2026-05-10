@@ -19,9 +19,9 @@ with
             cast(id as int) as category_pk
             , cast(categoryname as string) as category_name
             , cast(description as string) as category_description
-            , count(id) over(
+            , cast(count(id) over(
                 partition by id
-            ) as pk_count
+            ) as int) as pk_count
         from source_data
     )
 
