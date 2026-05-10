@@ -11,7 +11,7 @@ resources:
 
       libraries:
         - glob:
-            include: ../src/models/**/*.sql
+            include: ../src/models/**
 
       configuration:
         # Raw catalog and schemas
